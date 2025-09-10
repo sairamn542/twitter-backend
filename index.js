@@ -17,19 +17,10 @@ app.use(express.urlencoded({
 }))
 app.use(express.json())
 app.use(cookieParser())
-// const corsOption = {
-//     origin : "http://localhost:3000",
-//     credentials : true
-// }
-// const corsOption = {
-//     origin: "http://localhost:3000",
-//     credentials: true, // This is crucial
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//     allowedHeaders: ["Content-Type", "Authorization", "Accept"]
-// }
+
 const corsOption = {
   origin: [
-    "http://localhost:4000",
+    "http://localhost:3000",
     "https://twitter-sairam.netlify.app"
   ],
   credentials: true,
