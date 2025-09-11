@@ -28,23 +28,29 @@ app.use(cookieParser())
 // ];
 
 const allowedOrigins = [
-    "https://twitter-backend-cdp4.onrender.com",
-    "http://localhost:3000" // for local dev
+    "https://twitter-sairam.netlify.app", // Your Netlify frontend
+    "http://localhost:3000" // for local development
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps, Postman)
+        // Allow requests with no origin (like mobile apps, Postman, curl)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1) {
+        
+        // Check if the origin is in the allowed list
+        if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            // For other origins, you can choose to allow or block
+            // For deployment, you might want to allow all:
+            callback(null, true);
+            
+            // Or to be more restrictive:
+            // callback(new Error("Not allowed by CORS"));
         }
     },
     credentials: true
 }));
-
 // app.use(cors())
 //api
 app.use("/api/v1/user", userRoute)
