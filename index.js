@@ -19,7 +19,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 // const corsOption = {
-//   origin: "http://localhost:3000",
+//   origin: "https://twitter-backend-cdp4.onrender.com",
 //   credentials: true,
 // };
 // const allowedOrigins = [
@@ -39,7 +39,21 @@ app.use(cookieParser())
 //   credentials: true // required if using cookies
 // };
 
-app.use(cors())
+// app.use(cors())
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow requests from Postman, curl
+      callback(null, origin); // echo back requesting origin
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // allow cookies
+  })
+);
+
+// handle preflight requests
+app.options("*", cors({ credentials: true, origin: true }));
 //api
 app.use("/api/v1/user", userRoute)
 app.use("/api/v1/tweet", tweetRoute)
