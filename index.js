@@ -19,7 +19,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 // const corsOption = {
-//   origin: "https://twitter-backend-cdp4.onrender.com",
+//   origin: "http://localhost:3000",
 //   credentials: true,
 // };
 // const allowedOrigins = [
@@ -27,33 +27,25 @@ app.use(cookieParser())
 //   "https://twitter-sairam.netlify.app"
 // ];
 
-// const corsOptions = {
-//   origin: function(origin, callback) {
-//     if (!origin) return callback(null, true); // allow requests like Postman
-//     if (allowedOrigins.indexOf(origin) === -1) {
-//       const msg = "CORS Error: Origin not allowed";
-//       return callback(new Error(msg), false);
-//     }
-//     return callback(null, true);
-//   },
-//   credentials: true // required if using cookies
-// };
+const allowedOrigins = [
+    "https://twitter-backend-cdp4.onrender.com",
+    "http://localhost:3000" // for local dev
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, Postman)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 
 // app.use(cors())
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow requests from Postman, curl
-      callback(null, origin); // echo back requesting origin
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // allow cookies
-  })
-);
-
-// handle preflight requests
-app.options("*", cors({ credentials: true, origin: true }));
 //api
 app.use("/api/v1/user", userRoute)
 app.use("/api/v1/tweet", tweetRoute)
